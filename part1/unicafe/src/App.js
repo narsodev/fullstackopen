@@ -6,6 +6,10 @@ const App = () => {
   const [neutral, setNeutral] = useState(0)
   const [bad, setBad] = useState(0)
 
+  const all = good + neutral + bad
+  const average = (good - bad) / all
+  const positive = good / all * 100
+
   return (
     <main>
       <h1>Unicafe</h1>
@@ -21,6 +25,9 @@ const App = () => {
           <li>good: {good}</li>
           <li>neutral: {neutral}</li>
           <li>bad: {bad}</li>
+          <li>all: {all}</li>
+          <li>average: {average}</li>
+          <li>positive: {positive} %</li>
         </ul>
       </section>
     </main>
