@@ -17,13 +17,13 @@ const Content = ({ parts }) =>
   </>
 
 const Course = ({ course }) => {
-  const sum = course.parts.reduce((prev, cur) => prev + cur.exercises, 0) 
+  const total = course.parts.reduce((prev, cur) => prev + cur.exercises, 0) 
 
   return (
   <div>
     <Header course={course.name} />
     <Content parts={course.parts} />
-    <Total sum={sum} />
+    <Total sum={total} />
   </div>
   )
 }
