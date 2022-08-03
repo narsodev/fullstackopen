@@ -1,3 +1,4 @@
+import ListedCountry from "./ListedCountry"
 import SingleCountry from "./SingleCountry"
 
 const Countries = ({ countries }) => {
@@ -8,7 +9,7 @@ const Countries = ({ countries }) => {
     return <p>Too many matches, specify another filter</p>
 
   return countries.map(country => (
-    <div key={country.name.common}>{country.name.common}</div>
+    <ListedCountry country={country} key={country.name.common} />
   ))
 }
 
