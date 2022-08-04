@@ -19,7 +19,7 @@ const App = () => {
       })
     }, [])
 
-  const renderedPersons = filter.length > 0
+  const renderedPersons = filter !== ''
     ? persons.filter(person => person.name.toLowerCase().includes(filter.toLowerCase()))
     : persons
 
@@ -45,7 +45,17 @@ const App = () => {
         console.error(err)
         alert(`error adding ${newName} to phonebook`)
       })
+  }
 
+  const deletePerson = ({ id, name }) => {
+    personService.delete(id)
+      .then(() => {
+        setPersons(persons.filter(person => person.id !== id))
+      })
+      .catch(err => {
+        console.error(err)
+        alert(`error deleting ${name} from phonebook`)
+      })
   }
 
   return (
@@ -66,7 +76,7 @@ const App = () => {
 
       <h2>Numbers</h2>
 
-      <Persons persons={renderedPersons}/>
+      <Persons persons={renderedPersons} deletePerson={deletePerson} />
     </div>
   )
 }
