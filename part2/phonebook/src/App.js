@@ -16,7 +16,7 @@ const App = () => {
         const { data } = response
         setPersons(data)
       })
-  }, [])
+    }, [])
 
   const renderedPersons = filter.length > 0
     ? persons.filter(person => person.name.toLowerCase().includes(filter.toLowerCase()))
@@ -31,13 +31,22 @@ const App = () => {
 
     const newPerson = {
       name: newName,
-      number: newNumber,
-      id: Math.max(...persons.map(person => person.id)) + 1
+      number: newNumber
     }
 
-    setPersons([...persons, newPerson])
-    setNewName('')
-    setNewNumber('')
+    axios.post('http://localhost:3001/persons', newPerson)
+      .then(response => {
+        const { data: returnedPerson } = response
+
+        setPersons([...persons, returnedPerson])
+        setNewName('')
+        setNewNumber('')
+      })
+      .catch(err => {
+        console.error(err)
+        alert(`error adding ${newName} to phonebook`)
+      })
+
   }
 
   return (
