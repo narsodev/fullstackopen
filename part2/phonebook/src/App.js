@@ -16,8 +16,8 @@ const App = () => {
     personService.getAll()
       .then(setPersons)
       .catch(err => {
-        console.error(err)
-        alert('error retrieving data')
+        console.error(err.message)
+        createNotification(`Error retrieving phonebook`, 'red')
       })
     }, [])
 
@@ -25,11 +25,18 @@ const App = () => {
     ? persons.filter(person => person.name.toLowerCase().includes(filter.toLowerCase()))
     : persons
 
-  const createNotification = message => {
-    setNotification(message)
+  const createNotification = (message, color) => {
+    setNotification({ message, color })
     setTimeout(() => {
-      setNotification(notification => notification === message ? null : notification)
+      setNotification(notification => notification.message === message
+        ? null
+        : notification
+      )
     }, 5000)
+  }
+
+  const removePersonFromState = id => {
+    setPersons(persons.filter(person => person.id !== id))
   }
 
   const updatePerson = id => {
@@ -50,11 +57,12 @@ const App = () => {
         ))
         setNewName('')
         setNewNumber('')
-        createNotification(`Updated ${updatedPerson.name}`)
+        createNotification(`Updated ${updatedPerson.name}`, 'green')
       })
       .catch(err => {
-        console.error(err)
-        alert(`error updating ${personToUpdate.name}`)
+        console.error(err.message)
+        createNotification(`Information of ${newName} has already been removed from server`, 'red')
+        removePersonFromState(id)
       })
   }
 
@@ -75,22 +83,24 @@ const App = () => {
         setPersons([...persons, createdPerson])
         setNewName('')
         setNewNumber('')
-        createNotification(`Added ${createdPerson.name}`)
+        createNotification(`Added ${createdPerson.name}`, 'green')
       })
       .catch(err => {
-        console.error(err)
-        alert(`error adding ${newName} to phonebook`)
+        console.error(err.message)
+        createNotification(`Error adding ${newName} to phonebook`, 'red')
       })
   }
 
   const deletePerson = ({ id, name }) => {
     personService.delete(id)
       .then(() => {
-        setPersons(persons.filter(person => person.id !== id))
+        removePersonFromState(id)
+        createNotification(`Information of ${name} removed from server`, 'red')
       })
       .catch(err => {
-        console.error(err)
-        alert(`error deleting ${name} from phonebook`)
+        console.error(err.message)
+        createNotification(`Information of ${name} has already been removed from server`, 'red')
+        removePersonFromState(id)
       })
   }
 
@@ -98,7 +108,7 @@ const App = () => {
     <div>
       <h1>Phonebook</h1>
 
-      <Notification message={notification} />
+      <Notification notification={notification} />
 
       <Filter filter={filter} handleFilterChange={event => setFilter(event.target.value)} />
 

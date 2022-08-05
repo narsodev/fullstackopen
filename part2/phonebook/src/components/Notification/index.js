@@ -1,11 +1,12 @@
 import './index.css'
 
-const Notification = ({ message }) => {
-  if (message === null)
+const Notification = ({ notification }) => {
+  if (notification === null)
     return null
   
+  const { message, color } = notification
   return (
-    <div className='notification'>
+    <div className='notification' style={{ color }}>
       {message}
     </div>
   )
