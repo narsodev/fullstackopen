@@ -3,12 +3,14 @@ import personService from './services/persons'
 import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
 import Persons from './components/Persons'
+import Notification from './components/Notification'
 
 const App = () => {
   const [persons, setPersons] = useState([])
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [filter, setFilter] = useState('')
+  const [notification, setNotification] = useState(null)
 
   useEffect(() => {
     personService.getAll()
@@ -22,6 +24,13 @@ const App = () => {
   const renderedPersons = filter !== ''
     ? persons.filter(person => person.name.toLowerCase().includes(filter.toLowerCase()))
     : persons
+
+  const createNotification = message => {
+    setNotification(message)
+    setTimeout(() => {
+      setNotification(notification => notification === message ? null : notification)
+    }, 5000)
+  }
 
   const updatePerson = id => {
     const confirm = window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)
@@ -41,6 +50,7 @@ const App = () => {
         ))
         setNewName('')
         setNewNumber('')
+        createNotification(`Updated ${updatedPerson.name}`)
       })
       .catch(err => {
         console.error(err)
@@ -61,10 +71,11 @@ const App = () => {
     }
 
     personService.create(newPerson)
-      .then(returnedPerson => {
-        setPersons([...persons, returnedPerson])
+      .then(createdPerson => {
+        setPersons([...persons, createdPerson])
         setNewName('')
         setNewNumber('')
+        createNotification(`Added ${createdPerson.name}`)
       })
       .catch(err => {
         console.error(err)
@@ -86,6 +97,8 @@ const App = () => {
   return (
     <div>
       <h1>Phonebook</h1>
+
+      <Notification message={notification} />
 
       <Filter filter={filter} handleFilterChange={event => setFilter(event.target.value)} />
 
