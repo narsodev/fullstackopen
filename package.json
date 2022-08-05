@@ -21,5 +21,8 @@
   "homepage": "https://github.com/narsodev/fullstackopen-part3#readme",
   "devDependencies": {
     "nodemon": "^2.0.19"
+  },
+  "dependencies": {
+    "express": "^4.18.1"
   }
 }
