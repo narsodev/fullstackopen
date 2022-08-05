@@ -23,12 +23,37 @@ const App = () => {
     ? persons.filter(person => person.name.toLowerCase().includes(filter.toLowerCase()))
     : persons
 
+  const updatePerson = id => {
+    const confirm = window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)
+    if (!confirm) return
+
+    const personToUpdate = {
+      name: newName,
+      number: newNumber,
+      id
+    }
+
+    personService.update(personToUpdate)
+      .then(updatedPerson => {
+        setPersons(persons.map(person => person.id === updatedPerson.id
+          ? updatedPerson
+          : person
+        ))
+        setNewName('')
+        setNewNumber('')
+      })
+      .catch(err => {
+        console.error(err)
+        alert(`error updating ${personToUpdate.name}`)
+      })
+  }
+
   const addNewPerson = event => {
     event.preventDefault()
 
-    const alreadyExists = persons.some(person => person.name === newName)
-    if (alreadyExists)
-      return alert(`${newName} is already added to phonebook`)
+    const repeatedPerson = persons.find(person => person.name === newName)
+    if (repeatedPerson)
+      return updatePerson(repeatedPerson.id)
 
     const newPerson = {
       name: newName,
