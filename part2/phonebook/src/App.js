@@ -12,20 +12,7 @@ const App = () => {
   const [filter, setFilter] = useState('')
   const [notification, setNotification] = useState(null)
 
-  useEffect(() => {
-    personService.getAll()
-      .then(setPersons)
-      .catch(err => {
-        console.error(err.message)
-        createNotification(`Error retrieving phonebook`, 'red')
-      })
-    }, [])
-
-  const renderedPersons = filter !== ''
-    ? persons.filter(person => person.name.toLowerCase().includes(filter.toLowerCase()))
-    : persons
-
-  const createNotification = (message, color) => {
+  const createNotification = (message, color = 'green') => {
     setNotification({ message, color })
     setTimeout(() => {
       setNotification(notification => notification.message === message
@@ -34,6 +21,19 @@ const App = () => {
       )
     }, 5000)
   }
+
+  useEffect(() => {
+    personService.getAll()
+      .then(setPersons)
+      .catch(err => {
+        console.error(err.message)
+        createNotification('Error retrieving phonebook', 'red')
+      })
+    }, [])
+
+  const renderedPersons = filter !== ''
+    ? persons.filter(person => person.name.toLowerCase().includes(filter.toLowerCase()))
+    : persons
 
   const removePersonFromState = id => {
     setPersons(persons.filter(person => person.id !== id))
@@ -57,7 +57,7 @@ const App = () => {
         ))
         setNewName('')
         setNewNumber('')
-        createNotification(`Updated ${updatedPerson.name}`, 'green')
+        createNotification(`Updated ${updatedPerson.name}`)
       })
       .catch(err => {
         console.error(err.message)
@@ -83,7 +83,7 @@ const App = () => {
         setPersons([...persons, createdPerson])
         setNewName('')
         setNewNumber('')
-        createNotification(`Added ${createdPerson.name}`, 'green')
+        createNotification(`Added ${createdPerson.name}`)
       })
       .catch(err => {
         console.error(err.message)
@@ -95,7 +95,7 @@ const App = () => {
     personService.delete(id)
       .then(() => {
         removePersonFromState(id)
-        createNotification(`Information of ${name} removed from server`, 'red')
+        createNotification(`Information of ${name} removed from server correctly`)
       })
       .catch(err => {
         console.error(err.message)
