@@ -78,6 +78,27 @@ app.post('/api/persons', (req, res, next) => {
     .catch(next)
 })
 
+app.put('/api/persons/:id', (req, res, next) => {
+  const { id } = req.params
+
+  const { name, number } = req.body
+
+  if (!name)
+    return res.status(400).json({ error: 'name missing' })
+  if (!number)
+    return res.status(400).json({ error: 'number missing' })
+
+  Person
+    .findByIdAndUpdate(id, { name, number }, { new: true })
+    .then(person => {
+      if (person)
+        res.status(200).json(person)
+      else
+        res.status(404).end()
+    })
+    .catch(next)
+})
+
 app.delete('/api/persons/:id', (req, res, next) => {
   const { id } = req.params
 
