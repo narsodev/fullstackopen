@@ -71,14 +71,16 @@ app.post('/api/persons', (req, res) => {
 })
 
 app.delete('/api/persons/:id', (req, res) => {
-  const id = Number(req.params.id)
-  const person = persons.find(person => id === person.id)
+  const { id } = req.params
 
-  if (!person)
-    return res.status(404).send()
-  
-  persons = persons.filter(person => id !== person.id)
-  res.status(204).end()
+  Person
+    .findByIdAndDelete(id)
+    .then(result => {
+      if (result)
+        res.status(204).end()
+      else
+        res.status(404).end()
+    })
 })
 
 app.get('/info', (req, res) => {
