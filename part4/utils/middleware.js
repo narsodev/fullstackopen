@@ -16,7 +16,14 @@ const unknownEndpoint = (request, response) => {
   })
 }
 
+const errorHandler = (error, request, response, next) => {
+  logger.error(error.message)
+
+  next(error)
+}
+
 module.exports = {
   requestLogger,
-  unknownEndpoint
+  unknownEndpoint,
+  errorHandler
 }
