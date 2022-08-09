@@ -1,3 +1,3 @@
 # Phonebook
 
-[Link to app](https://fullstackopen-part3-production.up.railway.app)
+[Link to app](https://fullstackopen-part3.up.railway.app)
