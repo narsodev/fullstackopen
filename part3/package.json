@@ -1,0 +1,35 @@
+{
+  "name": "fullstackopen-part3",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js",
+    "build:ui": "rm -rf build && cd ../part2/phonebook && npm run build && cp -r build ../../part3",
+    "deploy": "railway up",
+    "logs:prod": "railway logs",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/narsodev/fullstackopen-part3.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/narsodev/fullstackopen-part3/issues"
+  },
+  "homepage": "https://github.com/narsodev/fullstackopen-part3#readme",
+  "devDependencies": {
+    "nodemon": "^2.0.19"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.1",
+    "express": "^4.18.1",
+    "mongoose": "^6.5.1",
+    "morgan": "^1.10.0"
+  }
+}
