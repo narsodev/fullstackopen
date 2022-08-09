@@ -6,7 +6,7 @@
   "scripts": {
     "start": "npm run build:ui && node index.js",
     "dev": "nodemon index.js",
-    "build:ui": "rm -rf build && cd ../part2/phonebook && npm run build && cp -r build ../../part3",
+    "build:ui": "rm -rf build && cd ../part2/phonebook && npm install && npm run build && cp -r build ../../part3",
     "deploy": "railway up",
     "logs:prod": "railway logs",
     "test": "echo \"Error: no test specified\" && exit 1"
