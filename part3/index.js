@@ -13,8 +13,9 @@ app.use(express.json())
 app.use(express.static('build'))
 
 morgan.token('body', (req, res) => {
-  if (req.method === 'POST')
+  if (req.method === 'POST') {
     return JSON.stringify(req.body)
+  }
   return ''
 })
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'))
@@ -32,10 +33,8 @@ app.get('/api/persons/:id', (req, res, next) => {
   Person
     .findById(id)
     .then(person => {
-      if (person)
-        res.json(person)
-      else
-        res.status(404).end()
+      if (person) res.json(person)
+      else res.status(404).end()
     })
     .catch(next)
 })
@@ -46,9 +45,10 @@ app.post('/api/persons', (req, res, next) => {
   Person
     .findOne({ name })
     .then(repeatedPerson => {
-      if (repeatedPerson)
-        return res.status(409).json({ error: 'Person already exists'})
-      
+      if (repeatedPerson) {
+        return res
+          .status(409).json({ error: 'Person already exists' })
+      }
       const person = new Person({ name, number })
 
       person.save()
@@ -66,13 +66,10 @@ app.put('/api/persons/:id', (req, res, next) => {
     .findByIdAndUpdate(
       id,
       { name, number },
-      { new: true , runValidators: true, context: 'query' }
+      { new: true, runValidators: true, context: 'query' }
     )
     .then(person => {
-      if (person)
-        res.status(200).json(person)
-      else
-        res.status(404).end()
+      if (person) { res.status(200).json(person) } else { res.status(404).end() }
     })
     .catch(next)
 })
@@ -83,10 +80,7 @@ app.delete('/api/persons/:id', (req, res, next) => {
   Person
     .findByIdAndDelete(id)
     .then(result => {
-      if (result)
-        res.status(204).end()
-      else
-        res.status(404).end()
+      if (result) { res.status(204).end() } else { res.status(404).end() }
     })
     .catch(next)
 })
@@ -109,15 +103,17 @@ app.get('/info', (req, res, next) => {
 const errorHandler = (err, req, res, next) => {
   console.error(err.message)
 
-  if (err.name === 'CastError')
+  if (err.name === 'CastError') {
     return res.status(400).send({
       error: 'malformatted id'
     })
-  
-  if (err.name === 'ValidationError')
+  }
+
+  if (err.name === 'ValidationError') {
     return res.status(400).send({
       error: err.message
     })
+  }
 
   next(err)
 }

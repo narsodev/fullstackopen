@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 
-const [node, path, password, name, number] = process.argv
+const [, , password, name, number] = process.argv
 
 if (process.argv.length !== 3 && process.argv.length !== 5) {
   console.log(
@@ -27,7 +27,7 @@ mongoose
         name,
         number
       })
-      
+
       return person.save()
         .then(person => {
           const { name, number } = person
