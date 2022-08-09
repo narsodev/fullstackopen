@@ -16,7 +16,26 @@ const personSchema = new mongoose.Schema({
     required: true,
     minLength: 3
   },
-  number: String
+  number: {
+    type: String,
+    required: true,
+    minLength: 8,
+    validate: {
+      validator: number => {
+        if (!number.split('').every(c => c >= '0' && c <= '9' || c === '-'))
+          return false
+
+        const splitted = number.split('-')
+
+        if (splitted.length !== 2)
+          return splitted.length === 1
+      
+        const [first] = splitted
+
+        return first.length >= 2 && first.length <= 3
+      }
+    }
+  }
 })
 
 personSchema.set('toJSON', {

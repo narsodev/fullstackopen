@@ -12,7 +12,7 @@ const App = () => {
   const [filter, setFilter] = useState('')
   const [notification, setNotification] = useState(null)
 
-  const createNotification = (message, color = 'green') => {
+  const createNotification = (message = 'Error', color = 'green') => {
     setNotification({ message, color })
     setTimeout(() => {
       setNotification(notification => notification.message === message

@@ -43,23 +43,24 @@ app.get('/api/persons/:id', (req, res, next) => {
 app.post('/api/persons', (req, res, next) => {
   const { name, number } = req.body
 
-  if (!number)
-    return res.status(400).json({ error: 'number missing' })
+  Person
+    .findOne({ name })
+    .then(repeatedPerson => {
+      if (repeatedPerson)
+        return res.status(409).json({ error: 'Person already exists'})
+      
+      const person = new Person({ name, number })
 
-  const person = new Person({ name, number })
-
-  person.save()
-    .then(person => res.status(201).json(person))
-    .catch(next)
+      person.save()
+        .then(person => res.status(201).json(person))
+        .catch(next)
+    })
 })
 
 app.put('/api/persons/:id', (req, res, next) => {
   const { id } = req.params
 
   const { name, number } = req.body
-
-  if (!number)
-    return res.status(400).json({ error: 'number missing' })
 
   Person
     .findByIdAndUpdate(
