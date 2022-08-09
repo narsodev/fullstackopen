@@ -1,0 +1,9 @@
+POST http://localhost:3003/api/blogs
+Content-Type: application/json
+
+{
+  "title": "No todo es un objeto en JavaScript",
+  "author": "midudev",
+  "url": "https://midu.dev/no-todo-objeto-javascript",
+  "likes": 73
+}
