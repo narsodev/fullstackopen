@@ -61,7 +61,7 @@ const App = () => {
       })
       .catch(err => {
         console.error(err.message)
-        createNotification(`Information of ${newName} has already been removed from server`, 'red')
+        createNotification(err.response?.data?.error, 'red')
         removePersonFromState(id)
       })
   }
@@ -87,7 +87,7 @@ const App = () => {
       })
       .catch(err => {
         console.error(err.message)
-        createNotification(`Error adding ${newName} to phonebook`, 'red')
+        createNotification(err.response?.data?.error, 'red')
       })
   }
 
