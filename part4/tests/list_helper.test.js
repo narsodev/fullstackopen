@@ -167,3 +167,35 @@ describe('most blogs', () => {
     expect(result).toEqual(expectedResult)
   })
 })
+
+describe('most likes', () => {
+  test('when list has no blogs, equals null', () => {
+    const blogs = []
+
+    const result = listHelper.mostLikes(blogs)
+    expect(result).toBeNull()
+  })
+
+  test('when list has blogs of only one author, equals author and the sum of likes', () => {
+    const [blog] = listWithBlogsOfSameAuthor
+    const { author } = blog
+
+    const expectedResult = {
+      author,
+      likes: 12
+    }
+
+    const result = listHelper.mostLikes(listWithBlogsOfSameAuthor)
+    expect(result).toEqual(expectedResult)
+  })
+
+  test('when list has several blogs, equals the author with most likes and the sum of his likes', () => {
+    const expectedResult = {
+      author: 'Edsger W. Dijkstra',
+      likes: 19
+    }
+
+    const result = listHelper.mostLikes(blogs)
+    expect(result).toEqual(expectedResult)
+  })
+})
