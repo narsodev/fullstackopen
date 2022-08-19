@@ -60,6 +60,22 @@ test('a valid blog can be added', async () => {
   expect(blogsContent).toContainEqual(newBlog)
 })
 
+test('the value of the "likes" property of the blog will be 0 if it is missing',
+  async () => {
+    const newBlog = {
+      title: 'Testing is great!',
+      author: 'tester',
+      url: 'http://localhost/test'
+    }
+
+    const response = await api
+      .post('/api/blogs')
+      .send(newBlog)
+
+    expect(response.body.likes).toBe(0)
+  }
+)
+
 afterAll(() => {
   mongoose.connection.close()
 })
