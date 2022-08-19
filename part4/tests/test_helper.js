@@ -17,7 +17,7 @@ const initialBlogs = [
 
 const blogsInDb = async () => {
   const blogs = await Blog.find({})
-  return blogs(blog => blog.toJSON())
+  return blogs.map(blog => blog.toJSON())
 }
 
 const helper = { initialBlogs, blogsInDb }
