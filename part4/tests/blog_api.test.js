@@ -90,6 +90,36 @@ describe('addition of a new blog', () => {
   })
 })
 
+describe('update of a blog', () => {
+  test('succeeds with status code 200 if blog is valid', async () => {
+    const newBlog = {
+      title: 'Updated blog',
+      url: 'http://localhost/test',
+      author: 'tester',
+      likes: 3
+    }
+
+    const blogsAtStart = await helper.blogsInDb()
+    const [blogToUpdate] = blogsAtStart
+
+    await api
+      .put(`/api/blogs/${blogToUpdate.id}`)
+      .send(newBlog)
+      .expect(200)
+      .expect('Content-Type', /application\/json/)
+
+    const blogsAtEnd = await helper.blogsInDb()
+    expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length)
+
+    const blogUpdated = blogsAtEnd.find(blog => blog.id === blogToUpdate.id)
+    expect(blogUpdated).toBeTruthy()
+
+    const { title, url, author, likes } = blogUpdated
+    const contentOfBlogUpdated = { title, url, author, likes }
+    expect(contentOfBlogUpdated).toEqual(newBlog)
+  })
+})
+
 describe('deletion of a blog', () => {
   test('succeeds with status code 204 if id is valid', async () => {
     const blogsAtStart = await helper.blogsInDb()
