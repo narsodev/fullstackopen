@@ -34,6 +34,32 @@ test('blog has a propierty named id', async () => {
   })
 })
 
+test('a valid blog can be added', async () => {
+  const newBlog = {
+    title: 'Testing is great!',
+    author: 'tester',
+    url: 'http://localhost/test',
+    likes: 1
+  }
+
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(201)
+    .expect('Content-Type', /application\/json/)
+
+  const blogsAtEnd = await helper.blogsInDb()
+  expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length + 1)
+
+  const blogsContent = blogsAtEnd.map(blog => {
+    const { title, author, url, likes } = blog
+
+    return { title, author, url, likes }
+  })
+
+  expect(blogsContent).toContainEqual(newBlog)
+})
+
 afterAll(() => {
   mongoose.connection.close()
 })
