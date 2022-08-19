@@ -1,9 +1,11 @@
+const { NODE_ENV } = process.env
+
 const info = (...params) => {
-  console.log(...params)
+  if (NODE_ENV !== 'test') console.log(...params)
 }
 
 const error = (...params) => {
-  console.error(...params)
+  if (NODE_ENV !== 'test') console.error(...params)
 }
 
 const logger = { info, error }
