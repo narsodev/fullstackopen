@@ -8,9 +8,7 @@ const api = supertest(app)
 
 beforeEach(async () => {
   await Blog.deleteMany({})
-
-  const blogs = helper.initialBlogs.map(blog => new Blog(blog))
-  await Promise.all(blogs.map(blog => blog.save()))
+  await Blog.insertMany(helper.initialBlogs)
 })
 
 describe('when there is initially some blogs saved', () => {
