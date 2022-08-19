@@ -76,6 +76,18 @@ test('the value of the "likes" property of the blog will be 0 if it is missing',
   }
 )
 
+test('blog without title and url propierties is not added', async () => {
+  const newBlog = {
+    author: 'tester',
+    likes: 1
+  }
+
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(400)
+})
+
 afterAll(() => {
   mongoose.connection.close()
 })
