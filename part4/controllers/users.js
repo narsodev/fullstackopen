@@ -1,6 +1,7 @@
 const usersRouter = require('express').Router()
 const bcrypt = require('bcrypt')
 const User = require('../models/user')
+const validator = require('../utils/validator')
 
 usersRouter.get('/', async (request, response) => {
   const users = await User.find({})
@@ -10,11 +11,9 @@ usersRouter.get('/', async (request, response) => {
 usersRouter.post('/', async (request, response) => {
   const { username, name, password } = request.body
 
-  const existingUser = await User.findOne({ username })
-  if (existingUser) {
-    return response.status(400).json({
-      error: 'username must be unique'
-    })
+  const error = await validator.usernameIsValid(username)
+  if (error) {
+    return response.status(400).json({ error })
   }
 
   const saltRounds = 10
