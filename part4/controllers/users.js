@@ -11,9 +11,13 @@ usersRouter.get('/', async (request, response) => {
 usersRouter.post('/', async (request, response) => {
   const { username, name, password } = request.body
 
-  const error = await validator.usernameIsValid(username)
-  if (error) {
-    return response.status(400).json({ error })
+  const validationError = await validator.userIsInvalid({
+    username,
+    name,
+    password
+  })
+  if (validationError) {
+    return response.status(400).json({ error: validationError })
   }
 
   const saltRounds = 10

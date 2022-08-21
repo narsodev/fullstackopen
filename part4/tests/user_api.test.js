@@ -67,6 +67,38 @@ describe('addition of a new user', () => {
     const usersAtEnd = await helper.usersInDb()
     expect(usersAtEnd).toEqual(usersAtStart)
   })
+
+  test('creation fails with proper statuscode and message if username is not, at least, 3 characters long', async () => {
+    const newUser = {
+      username: 'hi',
+      name: 'Hello',
+      password: 'test'
+    }
+
+    const response = await api
+      .post('/api/users')
+      .send(newUser)
+      .expect(400)
+      .expect('Content-Type', /application\/json/)
+
+    expect(response.body).toHaveProperty('error', 'username must be at least 3 characters long')
+  })
+
+  test('creation fails with proper statuscode and message if password is not, at least, 3 characters long', async () => {
+    const newUser = {
+      username: 'pass',
+      name: 'Hello',
+      password: 'no'
+    }
+
+    const response = await api
+      .post('/api/users')
+      .send(newUser)
+      .expect(400)
+      .expect('Content-Type', /application\/json/)
+
+    expect(response.body).toHaveProperty('error', 'password must be at least 3 characters long')
+  })
 })
 
 afterAll(() => {
