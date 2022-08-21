@@ -47,6 +47,26 @@ describe('addition of a new user', () => {
 
     expect(usernamesOfUsersAtEnd).toContain(newUser.username)
   })
+
+  test('creation fails with proper statuscode and message if username already taken', async () => {
+    const usersAtStart = await helper.usersInDb()
+    const newUser = {
+      username: usersAtStart[0].username,
+      name: usersAtStart[0].name,
+      password: 'test'
+    }
+
+    const response = await api
+      .post('/api/users')
+      .send(newUser)
+      .expect(400)
+      .expect('Content-Type', /application\/json/)
+
+    expect(response.body).toHaveProperty('error', 'username must be unique')
+
+    const usersAtEnd = await helper.usersInDb()
+    expect(usersAtEnd).toEqual(usersAtStart)
+  })
 })
 
 afterAll(() => {
