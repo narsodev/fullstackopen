@@ -1,5 +1,6 @@
 POST http://localhost:3003/api/blogs
 Content-Type: application/json
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzMDNiN2VjYzFmMTUzYjc0ZGFiYTQ3ZiIsImlhdCI6MTY2MTE4ODc5OH0.CGvXVg0avMss5KRIvy0zWaRrL1EiCzUTngYuMPcZ4hY
 
 {
   "title": "No todo es un objeto en JavaScript",
