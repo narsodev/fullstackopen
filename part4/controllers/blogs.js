@@ -12,20 +12,11 @@ blogsRouter.get('/', async (request, response) => {
   response.json(blogs)
 })
 
-const getTokenFromRequest = request => {
-  const authorization = request.get('authorization')
-  const isBearer = authorization && authorization.toLowerCase().startsWith('bearer ')
-
-  if (isBearer) return authorization.substring(7)
-  return null
-}
-
 blogsRouter.post('/', async (request, response) => {
   const { title, url } = request.body
   if (!title && !url) return response.status(400).end()
 
-  const token = getTokenFromRequest(request)
-  const decodedToken = jwt.verify(token, process.env.SECRET)
+  const decodedToken = jwt.verify(request.token, process.env.SECRET)
 
   if (!decodedToken.id) {
     return response.status(401).json({
