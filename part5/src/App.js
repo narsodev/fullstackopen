@@ -11,6 +11,7 @@ import Togglable from './components/Togglable'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
+  const [blogsSorted, setBlogsSorted] = useState([])
   const [user, setUser] = useState(null)
   const [notification, setNotification] = useState(null)
 
@@ -31,6 +32,11 @@ const App = () => {
       blogService.setToken(loggedUser.token)
     }
   }, [])
+
+  useEffect(() => {
+    const blogsSorted = [...blogs].sort((a, b) => b.likes - a.likes)
+    setBlogsSorted(blogsSorted)
+  }, [blogs])
 
   const handleLogin = (username, password) => {
     login({ username, password })
@@ -117,7 +123,7 @@ const App = () => {
           {user.name} logged in <button onClick={handleLogout}>logout</button>
         </div>
         <br />
-        {blogs.map(blog =>
+        {blogsSorted.map(blog =>
           <Blog handleLike={handleLikeToBlog} key={blog.id} blog={blog} />
         )}
       </section>
