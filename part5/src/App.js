@@ -95,7 +95,10 @@ const App = () => {
     }
   }
 
-  const handleDeleteBlog = id => {
+  const handleDeleteBlog = ({ id, title, author}) => {
+    const userConfirmation = window.confirm(`Remove blog: "${title}" by ${author}?`)
+    if (!userConfirmation) return
+
     blogService
       .delete(id)
       .then(() => {
