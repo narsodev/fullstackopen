@@ -93,10 +93,23 @@ const App = () => {
         const { error: errorMessage } = error.response.data
         createNotification(errorMessage, 'red')
     }
-
   }
 
-    const createNotification = (message = 'Unexpected error', color = 'green') => {
+  const handleDeleteBlog = id => {
+    blogService
+      .delete(id)
+      .then(() => {
+        setBlogs(blogs => blogs.filter(blog => blog.id !== id))
+        createNotification('Blog deleted')
+      })
+      .catch(error => {
+        console.error(error)
+        const { error: errorMessage } = error.response.data
+        createNotification(errorMessage, 'red')
+      })
+  }
+
+  const createNotification = (message = 'Unexpected error', color = 'green') => {
     setNotification({ message, color })
     setTimeout(() => {
       setNotification(notification => notification?.message === message
@@ -124,7 +137,13 @@ const App = () => {
         </div>
         <br />
         {blogsSorted.map(blog =>
-          <Blog handleLike={handleLikeToBlog} key={blog.id} blog={blog} />
+          <Blog
+            blog={blog}
+            user={user.username}
+            handleLike={handleLikeToBlog}
+            handleDelete={handleDeleteBlog}
+            key={blog.id}
+          />
         )}
       </section>
       <section>
