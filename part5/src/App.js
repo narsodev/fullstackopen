@@ -41,8 +41,8 @@ const App = () => {
         createNotification(`Logged as ${username}`)
       })
       .catch(error => {
+        console.error(error)
         const { error: errorMessage } = error.response.data
-        console.error(errorMessage)
         createNotification(errorMessage, 'red')
       })
   }
@@ -62,10 +62,32 @@ const App = () => {
         createNotification(`A new blog: "${newBlog.title}" by ${user.name} added`)
       })
       .catch(error => {
+        console.error(error)
         const { error: errorMessage } = error.response.data
-        console.error(errorMessage)
         createNotification(errorMessage, 'red')
       })
+  }
+
+  const handleLikeToBlog = async blog => {
+    const newBlog = {
+      ...blog,
+      likes: blog.likes + 1
+    }
+    try {
+      const updatedBlog = await blogService.update(newBlog)
+
+      setBlogs(blogs => blogs.map(blogInState => {
+        if (blogInState.id === blog.id) return updatedBlog
+        return blogInState
+      }))
+
+      createNotification('Blog liked!')
+    } catch (error) {
+        console.error(error)
+        const { error: errorMessage } = error.response.data
+        createNotification(errorMessage, 'red')
+    }
+
   }
 
     const createNotification = (message = 'Unexpected error', color = 'green') => {
@@ -96,7 +118,7 @@ const App = () => {
         </div>
         <br />
         {blogs.map(blog =>
-          <Blog key={blog.id} blog={blog} />
+          <Blog handleLike={handleLikeToBlog} key={blog.id} blog={blog} />
         )}
       </section>
       <section>

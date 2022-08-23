@@ -29,7 +29,7 @@ blogsRouter.post('/', middleware.tokenExtractor, middleware.userExtractor, async
   response.status(201).json(savedBlog)
 })
 
-blogsRouter.put('/:id', async (request, response) => {
+blogsRouter.put('/:id', middleware.tokenExtractor, middleware.userExtractor, async (request, response) => {
   const { id } = request.params
 
   const updatedBlog = await Blog
