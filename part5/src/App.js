@@ -61,7 +61,7 @@ const App = () => {
       })
   }
 
-    const createNotification = (message = '', color = 'green') => {
+    const createNotification = (message = 'Unexpected error', color = 'green') => {
     setNotification({ message, color })
     setTimeout(() => {
       setNotification(notification => notification?.message === message
