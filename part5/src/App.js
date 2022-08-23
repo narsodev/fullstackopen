@@ -64,7 +64,7 @@ const App = () => {
 
     blogService.create(blog)
       .then(newBlog => {
-        setBlogs(blogs => [newBlog, ...blogs])
+        setBlogs(blogs => [...blogs, { ...newBlog, user }])
         createNotification(`A new blog: "${newBlog.title}" by ${user.name} added`)
       })
       .catch(error => {
