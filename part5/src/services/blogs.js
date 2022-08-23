@@ -27,7 +27,7 @@ const update = async blog => {
 
   const { id, user } = blog
   const { id: userId } = user
- 
+
   const response = await axios
     .put(`${BASE_URL}/${id}`, {
       ...blog,

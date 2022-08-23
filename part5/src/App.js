@@ -20,7 +20,7 @@ const App = () => {
   useEffect(() => {
     blogService.getAll().then(blogs =>
       setBlogs(blogs)
-    ) 
+    )
   }, [])
 
   useEffect(() => {
@@ -56,7 +56,7 @@ const App = () => {
   const handleLogout = () => {
     setUser(null)
     window.localStorage.removeItem('loggedUser')
-    createNotification(`Logged out`)
+    createNotification('Logged out')
   }
 
   const handleAddBlog = blog => {
@@ -89,13 +89,13 @@ const App = () => {
 
       createNotification('Blog liked!')
     } catch (error) {
-        console.error(error)
-        const { error: errorMessage } = error.response.data
-        createNotification(errorMessage, 'red')
+      console.error(error)
+      const { error: errorMessage } = error.response.data
+      createNotification(errorMessage, 'red')
     }
   }
 
-  const handleDeleteBlog = ({ id, title, author}) => {
+  const handleDeleteBlog = ({ id, title, author }) => {
     const userConfirmation = window.confirm(`Remove blog: "${title}" by ${author}?`)
     if (!userConfirmation) return
 
@@ -115,13 +115,13 @@ const App = () => {
   const createNotification = (message = 'Unexpected error', color = 'green') => {
     setNotification({ message, color })
     setTimeout(() => {
-      setNotification(notification => notification?.message === message
+      setNotification(notification => notification && notification.message === message
         ? null
         : notification
       )
     }, 5000)
   }
-  
+
   if (!user) return (
     <div>
       <h2>log in to application</h2>

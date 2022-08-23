@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState } from 'react'
 import PropTypes from 'prop-types'
 
 const Blog = ({ blog, user, handleLike, handleDelete }) => {
@@ -24,16 +24,16 @@ const Blog = ({ blog, user, handleLike, handleDelete }) => {
       </button>
       { detailsVisible &&
         <div>
-            <div>url: {blog.url}</div>
-            <div>
+          <div>url: {blog.url}</div>
+          <div>
               likes {blog.likes}
-              <button onClick={() => handleLike(blog)}>like</button>
-            </div>
-            <div>user: {blog.user?.name || 'anonymous'}</div>
-            { userIsOwner && <button onClick={() => handleDelete(blog)}>remove</button> }
+            <button onClick={() => handleLike(blog)}>like</button>
+          </div>
+          <div>user: {blog.user ? blog.user.name : 'anonymous'}</div>
+          { userIsOwner && <button onClick={() => handleDelete(blog)}>remove</button> }
         </div>
       }
-    </div>    
+    </div>
   )
 }
 
