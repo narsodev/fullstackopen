@@ -1,15 +1,20 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
+
+import blogService from './services/blogs'
+import { login } from './services/login'
+
 import Notification from './components/Notification'
 import Blog from './components/Blog'
 import BlogForm from './components/BlogForm'
 import LoginForm from './components/LoginForm'
-import blogService from './services/blogs'
-import { login } from './services/login'
+import Togglable from './components/Togglable'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
   const [user, setUser] = useState(null)
   const [notification, setNotification] = useState(null)
+
+  const blogFormRef = useRef()
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -49,6 +54,8 @@ const App = () => {
   }
 
   const handleAddBlog = blog => {
+    blogFormRef.current.toggleVisibility()
+
     blogService.create(blog)
       .then(newBlog => {
         setBlogs(blogs => [newBlog, ...blogs])
@@ -94,7 +101,9 @@ const App = () => {
       </section>
       <section>
         <h2>create new</h2>
-        <BlogForm handleAddBlog={handleAddBlog} />
+        <Togglable buttonLabel='new blog' ref={blogFormRef}>
+          <BlogForm handleAddBlog={handleAddBlog} />
+        </Togglable>
       </section>
     </div>
   )
