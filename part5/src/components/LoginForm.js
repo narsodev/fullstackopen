@@ -29,7 +29,7 @@ const LoginForm = ({ handleLogin }) => {
       <div>
         <label>
           password
-          <input type="text" value={password} onChange={handlePasswordChange} />
+          <input type="password" value={password} onChange={handlePasswordChange} />
         </label>
       </div>
       <button type="submit">login</button>

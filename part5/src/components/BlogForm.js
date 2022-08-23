@@ -20,6 +20,9 @@ const BlogForm = ({ handleAddBlog }) => {
   const handleSubmit = event => {
     event.preventDefault()
 
+    setTitle('')
+    setAuthor('')
+    setUrl('')
     handleAddBlog({ title, author, url })
   }
 
@@ -27,17 +30,17 @@ const BlogForm = ({ handleAddBlog }) => {
     <form onSubmit={handleSubmit}>
       <div>
         <label>
-          title <input type="text" onChange={handleTitleChange} />
+          title <input type="text" onChange={handleTitleChange} value={title} required />
         </label>
       </div>
       <div>
         <label>
-          author <input type="text" onChange={handleAuthorChange} />
+          author <input type="text" onChange={handleAuthorChange} value={author} required />
         </label>
       </div>
       <div>
         <label>
-          url <input type="text" onChange={handleUrlChange}/>
+          url <input type="text" onChange={handleUrlChange} value={url} required />
         </label>
       </div>
       <button type="submit">create</button>
