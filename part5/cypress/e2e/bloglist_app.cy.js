@@ -15,8 +15,7 @@ describe('Blog app', function() {
 
   beforeEach(function() {
     cy.request('POST', 'http://localhost:3003/api/testing/reset')
-    cy.request('POST', 'http://localhost:3003/api/users', addedUser)
-    cy.visit('http://localhost:3000')
+    cy.createUser(addedUser)
   })
 
   it('Login form is shown', function() {
@@ -83,6 +82,30 @@ describe('Blog app', function() {
 
         cy.contains('view').click()
         cy.contains('likes 1')
+      })
+
+      it('a blog can be deleted', () => {
+        cy.contains(newBlog.title).contains('view').click()
+        cy.contains(newBlog.title).contains('remove').click()
+
+        cy.contains(newBlog.title).should('not.exist')
+
+        cy.visit('http://localhost:3000')
+        cy.contains(newBlog.title).should('not.exist')
+      })
+
+      it('a blog cannot be deleted if the user is not its owner', () => {
+        const notOwner = {
+          username: 'not-owner',
+          name: 'Not the owner',
+          password: 'http://localhost:3000'
+        }
+
+        cy.createUser(notOwner)
+        cy.login({ username: notOwner.username, password: notOwner.password })
+
+        cy.contains(newBlog.title).contains('view').click()
+        cy.contains(newBlog.title).contains('remove').should('not.exist')
       })
     })
   })
