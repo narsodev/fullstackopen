@@ -1,5 +1,6 @@
 import '@testing-library/jest-dom/extend-expect'
 import { render, screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import Blog from './index'
 
 const blog = {
@@ -31,7 +32,7 @@ describe('<Blog />', () => {
   })
 
   test(
-    'a blog renders the blog\'s title and author, but does not render its url or number of likes by default',
+    'renders the blog\'s title and author, but does not render its url or number of likes by default',
     () => {
       screen.getByText(`${blog.title} ${blog.author}`)
 
@@ -42,4 +43,14 @@ describe('<Blog />', () => {
       expect(likes).toBeNull()
     }
   )
+
+  test('renders the blog\'s url and number of likes when button to show details is clicked', async () => {
+    const user = userEvent.setup()
+    const button = screen.getByText('view')
+
+    await user.click(button)
+
+    screen.getByText(`url: ${blog.url}`)
+    screen.getByText(`likes ${blog.likes}`)
+  })
 })
