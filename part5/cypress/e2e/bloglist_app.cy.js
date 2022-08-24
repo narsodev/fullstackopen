@@ -7,6 +7,12 @@ describe('Blog app', function() {
     password: '123testing456'
   }
 
+  const newBlog = {
+    title: 'Blog created with Cypress',
+    author: 'Cypress',
+    url: 'http://localhost:3000'
+  }
+
   beforeEach(function() {
     cy.request('POST', 'http://localhost:3003/api/testing/reset')
     cy.request('POST', 'http://localhost:3003/api/users', addedUser)
@@ -51,14 +57,33 @@ describe('Blog app', function() {
     it('A blog can be created', function() {
       cy.contains('new blog').click()
 
-      cy.get('input[placeholder="Title"]').type('Blog by Cypress')
-      cy.get('input[placeholder="Author"]').type('Cypress')
-      cy.get('input[placeholder="Url"]').type('url')
+      cy.get('input[placeholder="Title"]').type(newBlog.title)
+      cy.get('input[placeholder="Author"]').type(newBlog.author)
+      cy.get('input[placeholder="Url"]').type(newBlog.url)
 
       cy.contains('create blog').click()
+      cy.contains(newBlog.title)
 
       cy.visit('http://localhost:3000')
-      cy.contains('Blog by Cypress')
+      cy.contains(newBlog.title)
+    })
+
+    describe('and several blogs exist', function() {
+      beforeEach(() => {
+        cy.createBlog(newBlog)
+      })
+
+      it('a blog can be liked by the user', () => {
+        cy.contains('view').click()
+
+        cy.get('button').contains('like').click()
+        cy.contains('likes 1')
+
+        cy.visit('http://localhost:3000')
+
+        cy.contains('view').click()
+        cy.contains('likes 1')
+      })
     })
   })
 })
