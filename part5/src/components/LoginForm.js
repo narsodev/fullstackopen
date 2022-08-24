@@ -19,7 +19,7 @@ const LoginForm = ({ handleLogin }) => {
   }
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} id='login-form'>
       <div>
         <label>
           username
