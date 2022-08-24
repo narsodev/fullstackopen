@@ -24,6 +24,9 @@ const passwordIsInvalid = password => {
 }
 
 const userIsInvalid = async ({ username, name, password }) => {
+  if (!username) return 'username required'
+  if (!password) return 'password required'
+
   const usernameError = await usernameIsInvalid(username)
   if (usernameError) return usernameError
 
