@@ -1,6 +1,5 @@
 const mongoose = require('mongoose')
 const supertest = require('supertest')
-const jwt = require('jsonwebtoken')
 const app = require('../app')
 const Blog = require('../models/blog')
 const helper = require('./test_helper')
@@ -54,12 +53,7 @@ describe('addition of a new blog', () => {
       likes: 1
     }
 
-    const [user] = await helper.usersInDb()
-    const userToSign = {
-      id: user.id,
-      username: user.username
-    }
-    const token = jwt.sign(userToSign, process.env.SECRET)
+    const { token, id: userId } = await helper.getUserToken()
 
     const response = await api
       .post('/api/blogs')
@@ -74,7 +68,7 @@ describe('addition of a new blog', () => {
     const blogCreated = blogsAtEnd.find(blog => blog.id === response.body.id)
     expect(blogCreated).toBeTruthy()
     expect(blogCreated).toHaveProperty('title', newBlog.title)
-    expect(blogCreated.user.toString()).toBe(userToSign.id)
+    expect(blogCreated.user.toString()).toBe(userId)
   })
 
   test('the value of the "likes" property of the blog will be 0 if it is missing',
@@ -85,12 +79,7 @@ describe('addition of a new blog', () => {
         url: 'http://localhost/test'
       }
 
-      const [user] = await helper.usersInDb()
-      const userToSign = {
-        id: user.id,
-        username: user.username
-      }
-      const token = jwt.sign(userToSign, process.env.SECRET)
+      const { token } = await helper.getUserToken()
 
       const response = await api
         .post('/api/blogs')
@@ -107,12 +96,7 @@ describe('addition of a new blog', () => {
       likes: 1
     }
 
-    const [user] = await helper.usersInDb()
-    const userToSign = {
-      id: user.id,
-      username: user.username
-    }
-    const token = jwt.sign(userToSign, process.env.SECRET)
+    const { token } = await helper.getUserToken()
 
     await api
       .post('/api/blogs')
@@ -151,8 +135,11 @@ describe('update of a blog', () => {
     const blogsAtStart = await helper.blogsInDb()
     const [blogToUpdate] = blogsAtStart
 
+    const { token } = await helper.getUserToken()
+
     await api
       .put(`/api/blogs/${blogToUpdate.id}`)
+      .set('Authorization', `bearer ${token}`)
       .send(newBlog)
       .expect(200)
       .expect('Content-Type', /application\/json/)
@@ -171,12 +158,7 @@ describe('update of a blog', () => {
 
 describe('deletion of a blog', () => {
   test('succeeds with status code 204 if id is valid', async () => {
-    const [user] = await helper.usersInDb()
-    const userToSign = {
-      id: user.id,
-      username: user.username
-    }
-    const token = jwt.sign(userToSign, process.env.SECRET)
+    const { token } = await helper.getUserToken()
 
     const blogsAtStart = await helper.blogsInDb()
     const [blogToDelete] = blogsAtStart
