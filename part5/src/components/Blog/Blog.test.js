@@ -17,17 +17,20 @@ const blog = {
 }
 
 const user = blog.user.username
-const handleLike = () => {}
 const handleDelete = () => {}
 
 describe('<Blog />', () => {
+  let mockHandlerLike
+
   beforeEach(() => {
+    mockHandlerLike = jest.fn()
+
     render(
       <Blog
         blog={blog}
         user={user}
         handleDelete={handleDelete}
-        handleLike={handleLike}
+        handleLike={mockHandlerLike}
       />)
   })
 
@@ -45,12 +48,26 @@ describe('<Blog />', () => {
   )
 
   test('renders the blog\'s url and number of likes when button to show details is clicked', async () => {
-    const user = userEvent.setup()
     const button = screen.getByText('view')
+    const user = userEvent.setup()
 
     await user.click(button)
 
     screen.getByText(`url: ${blog.url}`)
     screen.getByText(`likes ${blog.likes}`)
+  })
+
+  test('clicking twice the like button calls event handler twice', async () => {
+    const button = screen.getByText('view')
+    const user = userEvent.setup()
+
+    await user.click(button)
+
+    const likeButton = screen.getByText('like')
+
+    await user.click(likeButton)
+    await user.click(likeButton)
+
+    expect(mockHandlerLike.mock.calls).toHaveLength(2)
   })
 })
