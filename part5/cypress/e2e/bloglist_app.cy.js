@@ -84,6 +84,19 @@ describe('Blog app', function() {
         cy.contains('likes 1')
       })
 
+      it.only('blogs are ordered according to its likes', () => {
+        const blogMostLiked = {
+          title: 'most liked',
+          author: 'Liker',
+          url: 'http://localhost:3000',
+          likes: 100
+        }
+        cy.createBlog(blogMostLiked)
+
+        cy.get('.blog').eq(0).contains(blogMostLiked.title)
+        cy.get('.blog').eq(1).contains(newBlog.title)
+      })
+
       it('a blog can be deleted', () => {
         cy.contains(newBlog.title).contains('view').click()
         cy.contains(newBlog.title).contains('remove').click()
