@@ -84,7 +84,7 @@ describe('Blog app', function() {
         cy.contains('likes 1')
       })
 
-      it.only('blogs are ordered according to its likes', () => {
+      it('blogs are ordered according to its likes', () => {
         const blogMostLiked = {
           title: 'most liked',
           author: 'Liker',

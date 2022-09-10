@@ -34,6 +34,9 @@ blogsRouter.put('/:id', middleware.tokenExtractor, middleware.userExtractor, asy
 
   const updatedBlog = await Blog
     .findByIdAndUpdate(id, request.body, { new: true })
+    .populate('user', {
+      username: 1, name: 1, id: 1
+    })
 
   response.json(updatedBlog)
 })

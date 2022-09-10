@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 const Blog = ({ blog, user, handleLike, handleDelete }) => {
   const [detailsVisible, setDetailsVisible] = useState(false)
 
-  const userIsOwner = user === blog.user.username
+  const userIsOwner = user === blog.user?.username
 
   const handleDetailsVisibilityChange = () => setDetailsVisible(visible => !visible)
 
