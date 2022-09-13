@@ -7,7 +7,7 @@ const initialState = {
 const actions = {
   GOOD: state => ({ ...state, good: state.good + 1}),
   OK: state => ({ ...state, ok: state.ok + 1}),
-  BAD: state => ({ ...state, bad: state.good + 1}),
+  BAD: state => ({ ...state, bad: state.bad + 1}),
   ZERO: () => initialState
 }
 
