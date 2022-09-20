@@ -41,13 +41,16 @@ const actions = {
   VOTE: (state, data) => {
     const { id } = data
 
-    return state.map(anecdote => {
+    const stateVoted = state.map(anecdote => {
       if (anecdote.id === id) {
         const votes = anecdote.votes + 1
         return { ...anecdote, votes }
       }
       return anecdote
     })
+
+    const stateOrdered = [...stateVoted].sort((a, b) => b.votes - a.votes)
+    return stateOrdered
   },
   NEW_ANECDOTE: (state, data) => ([...state, data])
 }
