@@ -1,5 +1,5 @@
 import deepFreeze from 'deep-freeze'
-import anecdoteReducer, { initialState, createAnecdote } from './anecdoteReducer'
+import anecdoteReducer, { initialState, createAnecdote, voteAnecdote } from './anecdoteReducer'
 
 describe('anecdotes reducer', () => {
   test('should return a proper initial state when called with undefined state', () => {
@@ -14,15 +14,10 @@ describe('anecdotes reducer', () => {
   test('votes of anecdote are incremented', () => {
     const anecdoteToVote = initialState[0]
 
-    const action = {
-      type: 'VOTE',
-      data: { id: anecdoteToVote.id }
-    }
-
     const state = initialState
     deepFreeze(state)
 
-    const newState = anecdoteReducer(state, action)
+    const newState = anecdoteReducer(state, voteAnecdote(anecdoteToVote.id))
 
     expect(newState).toHaveLength(state.length)
 
