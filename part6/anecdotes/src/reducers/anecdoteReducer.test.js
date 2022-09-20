@@ -10,4 +10,26 @@ describe('anecdotes reducer', () => {
     const newState = anecdoteReducer(undefined, action)
     expect(newState).toEqual(initialState)
   })
+
+  test('votes of anecdote are incremented', () => {
+    const anecdoteToVote = initialState[0]
+
+    const action = {
+      type: 'VOTE',
+      data: { id: anecdoteToVote.id }
+    }
+
+    const state = initialState
+    deepFreeze(state)
+
+    const newState = anecdoteReducer(state, action)
+
+    expect(newState).toHaveLength(state.length)
+
+    expect(newState).toContainEqual(state[1])
+    expect(newState).toContainEqual({
+      ...anecdoteToVote,
+      votes: anecdoteToVote.votes + 1
+    })
+  })
 })
