@@ -9,7 +9,7 @@ const anecdotesAtStart = [
 
 const getId = () => (100000 * Math.random()).toFixed(0)
 
-const asObject = (anecdote) => {
+const asObject = anecdote => {
   return {
     content: anecdote,
     id: getId(),
@@ -26,6 +26,17 @@ export const voteAnecdote = id => (
   }
 )
 
+export const createAnecdote = anecdote => (
+  {
+    type: 'NEW_ANECDOTE',
+    data: {
+      content: anecdote,
+      votes: 0,
+      id: getId()
+    }
+  }
+)
+
 const actions = {
   VOTE: (state, data) => {
     const { id } = data
@@ -37,7 +48,8 @@ const actions = {
       }
       return anecdote
     })
-  }
+  },
+  NEW_ANECDOTE: (state, data) => ([...state, data])
 }
 
 const reducer = (state = initialState, action) => {
