@@ -16,6 +16,11 @@ export const create = async (content, votes = 0) => {
   return data
 }
 
-const anecdoteService = { getAll, create }
+export const update = async ({ id, content, votes }) => {
+  const { data } = await instance.put(`/${id}`, { content, votes })
+  return data
+}
+
+const anecdoteService = { getAll, create, update }
 
 export default anecdoteService
