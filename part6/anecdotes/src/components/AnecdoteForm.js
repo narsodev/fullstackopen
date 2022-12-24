@@ -2,7 +2,6 @@ import { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { createAnecdote } from '../reducers/anecdoteReducer'
 import { setNotification } from '../reducers/notificationReducer'
-import { create } from '../services/anecdotes'
 
 const AnecdoteForm = () => {
   const [anecdote, setAnecdote] = useState('')
@@ -15,10 +14,8 @@ const AnecdoteForm = () => {
   const handleSubmit = async event => {
     event.preventDefault()
 
-    const newAnecdote = await create(anecdote)
-
-    dispatch(createAnecdote(newAnecdote))
-    dispatch(setNotification(`anecdote '${newAnecdote.content}' created`))
+    dispatch(createAnecdote(anecdote))
+    dispatch(setNotification(`anecdote '${anecdote}' created`))
     setAnecdote('')
   }
 
