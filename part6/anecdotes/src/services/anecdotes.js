@@ -10,3 +10,8 @@ export const getAll = async () => {
   const { data } = await instance.get()
   return data
 }
+
+export const create = async (content, votes = 0) => {
+  const { data } = await instance.post('', { content, votes })
+  return data
+}
