@@ -8,6 +8,7 @@ const Notification = () => {
   const timer = useRef()
 
   useEffect(() => {
+    clearTimeout(timer.current)
     timer.current = setTimeout(() => {
       dispatch(clearNotification())
     }, 5000)
