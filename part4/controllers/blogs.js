@@ -41,6 +41,19 @@ blogsRouter.put('/:id', middleware.tokenExtractor, middleware.userExtractor, asy
   response.json(updatedBlog)
 })
 
+blogsRouter.post('/:id/comments', async (request, response) => {
+  const { id } = request.params
+  const { comment } = request.body
+
+  const blog = await Blog.findById(id)
+  if (!blog) return response.status(404).end()
+
+  blog.comments = blog.comments.concat(comment)
+  const updatedBlog = await blog.save()
+
+  response.json(updatedBlog)
+})
+
 blogsRouter.delete('/:id', middleware.tokenExtractor, middleware.userExtractor, async (request, response) => {
   const { id } = request.params
 

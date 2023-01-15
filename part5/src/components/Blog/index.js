@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types'
 import { useNavigate } from 'react-router-dom'
+import Comments from '../Comments'
 
 const Blog = ({ blog, user, handleLike, handleDelete }) => {
   const navigate = useNavigate()
@@ -23,6 +24,7 @@ const Blog = ({ blog, user, handleLike, handleDelete }) => {
         </div>
         <div>added by {blog.user ? blog.user.name : 'anonymous'}</div>
         { userIsOwner && <button onClick={handleDeleteClick}>remove</button> }
+        <Comments comments={blog.comments} />
       </div>
     </div>
   )
