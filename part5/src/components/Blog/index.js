@@ -1,45 +1,39 @@
-import { useState } from 'react'
 import PropTypes from 'prop-types'
+import { useNavigate } from 'react-router-dom'
 
 const Blog = ({ blog, user, handleLike, handleDelete }) => {
-  const [detailsVisible, setDetailsVisible] = useState(false)
+  const navigate = useNavigate()
 
-  const userIsOwner = user === blog.user?.username
-
-  const handleDetailsVisibilityChange = () => setDetailsVisible(visible => !visible)
-
-  const blogStyle = {
-    paddingTop: 10,
-    paddingLeft: 2,
-    border: 'solid',
-    borderWidth: 1,
-    marginBottom: 5
+  const handleDeleteClick = () => {
+    if (handleDelete(blog)) navigate('/')
   }
 
+  if (!blog) return null
+
+  const userIsOwner = user.id === blog.user.id
+
   return (
-    <div style={blogStyle} className='blog'>
-      {blog.title} {blog.author}
-      <button type='button' onClick={handleDetailsVisibilityChange}>
-        { detailsVisible ? 'hide' : 'view' }
-      </button>
-      { detailsVisible &&
+    <div>
+      <h1>{blog.title} {blog.author}</h1>
+      <div>
+        <div>url: <a href={blog.url}>{blog.url}</a></div>
         <div>
-          <div>url: {blog.url}</div>
-          <div>
-              likes {blog.likes}
-            <button onClick={() => handleLike(blog)}>like</button>
-          </div>
-          <div>user: {blog.user ? blog.user.name : 'anonymous'}</div>
-          { userIsOwner && <button onClick={() => handleDelete(blog)}>remove</button> }
+          {blog.likes} likes
+          <button onClick={() => handleLike(blog)}>like</button>
         </div>
-      }
+        <div>added by {blog.user ? blog.user.name : 'anonymous'}</div>
+        { userIsOwner && <button onClick={handleDeleteClick}>remove</button> }
+      </div>
     </div>
   )
 }
 
 Blog.propTypes = {
-  blog: PropTypes.object.isRequired,
-  user: PropTypes.string.isRequired,
+  blog: PropTypes.oneOfType([
+    PropTypes.object.isRequired,
+    PropTypes.instanceOf(null)
+  ]),
+  user: PropTypes.object.isRequired,
   handleLike: PropTypes.func.isRequired,
   handleDelete: PropTypes.func.isRequired
 }

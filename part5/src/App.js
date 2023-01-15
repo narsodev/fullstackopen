@@ -7,7 +7,7 @@ import Notification from './components/Notification'
 import Blog from './components/Blog'
 import LoginForm from './components/LoginForm'
 import Users from './components/Users'
-import { Route, Routes, useMatch } from 'react-router-dom'
+import { Link, Route, Routes, useMatch } from 'react-router-dom'
 import Togglable from './components/Togglable'
 import BlogForm from './components/BlogForm'
 import User from './components/User'
@@ -23,8 +23,11 @@ const App = () => {
   const blogFormRef = useRef()
 
   const [users, setUsers] = useState([])
-  const match = useMatch('/users/:id')
-  const userViewing = match ? users.find(user => user.id === match.params.id) : null
+  const userMatch = useMatch('/users/:id')
+  const userViewing = userMatch ? users.find(user => user.id === userMatch.params.id) : null
+
+  const blogMatch = useMatch('/blogs/:id')
+  const blogViewing = blogMatch ? blogs.find(blog => blog.id === blogMatch.params.id) : null
 
   useEffect(() => {
     usersService.getAll()
@@ -121,7 +124,7 @@ const App = () => {
 
   const handleDeleteBlog = ({ id, title, author }) => {
     const userConfirmation = window.confirm(`Remove blog: "${title}" by ${author}?`)
-    if (!userConfirmation) return
+    if (!userConfirmation) return false
 
     blogService
       .delete(id)
@@ -143,6 +146,8 @@ const App = () => {
         const { error: errorMessage } = error.response.data
         createNotification(errorMessage, 'red')
       })
+
+    return true
   }
 
   const createNotification = (message = 'Unexpected error', color = 'green') => {
@@ -173,13 +178,15 @@ const App = () => {
           <>
             <section>
               {blogsSorted.map(blog =>
-                <Blog
-                  blog={blog}
-                  user={user.username}
-                  handleLike={handleLikeToBlog}
-                  handleDelete={handleDeleteBlog}
-                  key={blog.id}
-                />
+                <div key={blog.id} style={{
+                  padding: '0.5rem',
+                  border: '1px solid black',
+                  marginBottom: '0.5rem'
+                }}>
+                  <Link to={`/blogs/${blog.id}`}>
+                    {blog.title} {blog.author}
+                  </Link>
+                </div>
               )}
             </section>
             <section>
@@ -191,6 +198,7 @@ const App = () => {
           </>
         }>
         </Route>
+        <Route path='/blogs/:id' element={ <Blog blog={blogViewing} user={user} handleDelete={handleDeleteBlog} handleLike={handleLikeToBlog} /> } />
         <Route path='/users' element={ <Users users={users} /> }>
         </Route>
         <Route path='/users/:id' element={ <User user={userViewing} /> } />
