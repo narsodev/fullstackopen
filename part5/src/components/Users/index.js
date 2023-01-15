@@ -1,15 +1,6 @@
-import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import usersService from '../../services/users'
 
-export default function Users () {
-  const [users, setUsers] = useState([])
-
-  useEffect(() => {
-    usersService.getAll()
-      .then(setUsers)
-  }, [])
-
+export default function Users ({ users }) {
   return (
     <section>
       <h2>Users</h2>

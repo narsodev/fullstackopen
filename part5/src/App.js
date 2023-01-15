@@ -5,10 +5,13 @@ import { login } from './services/login'
 
 import Notification from './components/Notification'
 import Blog from './components/Blog'
-import BlogForm from './components/BlogForm'
 import LoginForm from './components/LoginForm'
-import Togglable from './components/Togglable'
 import Users from './components/Users'
+import { Route, Routes, useMatch } from 'react-router-dom'
+import Togglable from './components/Togglable'
+import BlogForm from './components/BlogForm'
+import User from './components/User'
+import usersService from './services/users'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -17,6 +20,16 @@ const App = () => {
   const [notification, setNotification] = useState(null)
 
   const blogFormRef = useRef()
+
+  const [users, setUsers] = useState([])
+  const match = useMatch('/users/:id')
+  const userViewing = match ? users.find(user => user.id === match.params.id) : null
+
+  useEffect(() => {
+    usersService.getAll()
+      .then(setUsers)
+  }, [])
+
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -60,19 +73,28 @@ const App = () => {
     createNotification('Logged out')
   }
 
-  const handleAddBlog = blog => {
+  const handleAddBlog = async blog => {
     blogFormRef.current.toggleVisibility()
 
-    blogService.create(blog)
-      .then(newBlog => {
-        setBlogs(blogs => [...blogs, { ...newBlog, user }])
-        createNotification(`A new blog: "${newBlog.title}" by ${user.name} added`)
-      })
-      .catch(error => {
-        console.error(error)
-        const { error: errorMessage } = error.response.data
-        createNotification(errorMessage, 'red')
-      })
+    try {
+      const newBlog = await blogService.create(blog)
+      setBlogs(blogs => [...blogs, { ...newBlog, user }])
+      createNotification(`A new blog: "${newBlog.title}" by ${user.name} added`)
+      setUsers(users => users.map(userInState => {
+        console.log(user, userInState)
+        if (userInState.id === user.id) {
+          return {
+            ...userInState,
+            blogs: [...userInState.blogs, newBlog]
+          }
+        }
+        return userInState
+      }))
+    } catch (error) {
+      console.error(error)
+      const { error: errorMessage } = error.response.data
+      createNotification(errorMessage, 'red')
+    }
   }
 
   const handleLikeToBlog = async blog => {
@@ -105,6 +127,15 @@ const App = () => {
       .then(() => {
         setBlogs(blogs => blogs.filter(blog => blog.id !== id))
         createNotification('Blog deleted')
+        setUsers(users => users.map(userInState => {
+          if (userInState.id === user.id) {
+            return {
+              ...userInState,
+              blogs: userInState.blogs.filter(blog => blog.id !== id)
+            }
+          }
+          return userInState
+        }))
       })
       .catch(error => {
         console.error(error)
@@ -133,30 +164,39 @@ const App = () => {
 
   return (
     <div>
+      <h1>blogs</h1>
+      <Notification notification={notification} />
       <section>
-        <h2>blogs</h2>
-        <Notification notification={notification} />
         <div>
           {user.name} logged in <button onClick={handleLogout}>logout</button>
         </div>
-        <br />
-        {blogsSorted.map(blog =>
-          <Blog
-            blog={blog}
-            user={user.username}
-            handleLike={handleLikeToBlog}
-            handleDelete={handleDeleteBlog}
-            key={blog.id}
-          />
-        )}
       </section>
-      <section>
-        <h2>create new</h2>
-        <Togglable buttonLabel='new blog' ref={blogFormRef}>
-          <BlogForm handleAddBlog={handleAddBlog} />
-        </Togglable>
-      </section>
-      <Users />
+      <Routes>
+        <Route path='/' element={
+          <>
+            <section>
+              {blogsSorted.map(blog =>
+                <Blog
+                  blog={blog}
+                  user={user.username}
+                  handleLike={handleLikeToBlog}
+                  handleDelete={handleDeleteBlog}
+                  key={blog.id}
+                />
+              )}
+            </section>
+            <section>
+              <h2>create new</h2>
+              <Togglable buttonLabel='new blog' ref={blogFormRef}>
+                <BlogForm handleAddBlog={handleAddBlog} />
+              </Togglable>
+            </section>
+            <Users users={users} />
+          </>
+        }>
+        </Route>
+        <Route path='/users/:id' element={<User user={userViewing} />} />
+      </Routes>
     </div>
   )
 }
