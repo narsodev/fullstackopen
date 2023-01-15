@@ -8,6 +8,7 @@ import Blog from './components/Blog'
 import BlogForm from './components/BlogForm'
 import LoginForm from './components/LoginForm'
 import Togglable from './components/Togglable'
+import Users from './components/Users'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -155,6 +156,7 @@ const App = () => {
           <BlogForm handleAddBlog={handleAddBlog} />
         </Togglable>
       </section>
+      <Users />
     </div>
   )
 }
