@@ -12,6 +12,7 @@ import Togglable from './components/Togglable'
 import BlogForm from './components/BlogForm'
 import User from './components/User'
 import usersService from './services/users'
+import Navigation from './components/Navigation'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -164,13 +165,9 @@ const App = () => {
 
   return (
     <div>
+      <Navigation user={user} handleLogout={handleLogout} />
       <h1>blogs</h1>
       <Notification notification={notification} />
-      <section>
-        <div>
-          {user.name} logged in <button onClick={handleLogout}>logout</button>
-        </div>
-      </section>
       <Routes>
         <Route path='/' element={
           <>
@@ -191,11 +188,12 @@ const App = () => {
                 <BlogForm handleAddBlog={handleAddBlog} />
               </Togglable>
             </section>
-            <Users users={users} />
           </>
         }>
         </Route>
-        <Route path='/users/:id' element={<User user={userViewing} />} />
+        <Route path='/users' element={ <Users users={users} /> }>
+        </Route>
+        <Route path='/users/:id' element={ <User user={userViewing} /> } />
       </Routes>
     </div>
   )
