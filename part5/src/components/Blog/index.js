@@ -2,7 +2,7 @@ import PropTypes from 'prop-types'
 import { useNavigate } from 'react-router-dom'
 import Comments from '../Comments'
 
-const Blog = ({ blog, user, handleLike, handleDelete }) => {
+const Blog = ({ blog, user, handleLike, handleDelete, onAddComment }) => {
   const navigate = useNavigate()
 
   const handleDeleteClick = () => {
@@ -12,6 +12,10 @@ const Blog = ({ blog, user, handleLike, handleDelete }) => {
   if (!blog) return null
 
   const userIsOwner = user.id === blog.user.id
+
+  const handleAddComment = comment => {
+    onAddComment(blog.id, comment)
+  }
 
   return (
     <div>
@@ -24,7 +28,7 @@ const Blog = ({ blog, user, handleLike, handleDelete }) => {
         </div>
         <div>added by {blog.user ? blog.user.name : 'anonymous'}</div>
         { userIsOwner && <button onClick={handleDeleteClick}>remove</button> }
-        <Comments comments={blog.comments} />
+        <Comments comments={blog.comments} onAddComment={handleAddComment} />
       </div>
     </div>
   )

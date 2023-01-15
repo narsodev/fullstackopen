@@ -150,6 +150,24 @@ const App = () => {
     return true
   }
 
+  const handleAddCommentToBlog = async (blog, comment) => {
+    try {
+      const updatedBlog = await blogService.addComment(blog, comment)
+
+      setBlogs(blogs => blogs.map(blogInState => {
+        if (blogInState.id === blog) return updatedBlog
+        return blogInState
+      }))
+
+      createNotification('Comment added!')
+
+    } catch (error) {
+      console.error(error)
+      const { error: errorMessage } = error.response.data
+      createNotification(errorMessage, 'red')
+    }
+  }
+
   const createNotification = (message = 'Unexpected error', color = 'green') => {
     setNotification({ message, color })
     setTimeout(() => {
@@ -198,7 +216,13 @@ const App = () => {
           </>
         }>
         </Route>
-        <Route path='/blogs/:id' element={ <Blog blog={blogViewing} user={user} handleDelete={handleDeleteBlog} handleLike={handleLikeToBlog} /> } />
+        <Route path='/blogs/:id' element={ <Blog
+          blog={blogViewing}
+          user={user}
+          handleDelete={handleDeleteBlog}
+          handleLike={handleLikeToBlog}
+          onAddComment={handleAddCommentToBlog}
+        /> } />
         <Route path='/users' element={ <Users users={users} /> }>
         </Route>
         <Route path='/users/:id' element={ <User user={userViewing} /> } />
